@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- email-doctor app ---
+node_modules/
+frontend/dist/
+backend/jobs.db
+*.db
+.env.*
+!.env.example
