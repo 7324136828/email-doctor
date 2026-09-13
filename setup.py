@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cross-platform automated setup orchestrator for email-doctor.
 
-Creates the Python virtual environment, installs backend dependencies,
+Uses the active Python environment or creates a local virtual environment, installs backend dependencies,
 installs frontend npm packages, and seeds .env from .env.example.
 """
 
@@ -30,6 +30,15 @@ def check_prerequisites():
 
 
 def create_virtualenv():
+    if (
+        sys.prefix != getattr(sys, "base_prefix", sys.prefix)
+        or os.environ.get("VIRTUAL_ENV")
+        or os.environ.get("CONDA_PREFIX")
+    ):
+        py_bin = Path(sys.executable)
+        log(f"Using active Python environment at {sys.prefix}...")
+        return py_bin, py_bin.parent / ("pip.exe" if os.name == "nt" else "pip")
+
     log(f"Configuring Python virtual environment at {VENV_DIR}...")
     if not VENV_DIR.exists():
         import venv
